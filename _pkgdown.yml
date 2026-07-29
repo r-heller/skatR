@@ -1,0 +1,58 @@
+url: https://r-heller.github.io/skatR/
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#5E2C8E"
+reference:
+- title: Cards and ordering
+  desc: The 32-card deck, and how its cards rank under each game type.
+  contents:
+  - skat-constants
+  - sk_full_deck
+  - sk_card
+  - format.sk_card
+  - sk_suit_of
+  - sk_rank_of
+  - sk_points
+  - sk_game_types
+  - sk_card_order
+  - sk_strength
+  - sk_is_trump
+  - sk_effective_suit
+- title: Bidding
+  desc: Game values (Reizwerte) and the matador multiplier.
+  contents:
+  - sk_base_value
+  - sk_matadors
+  - sk_game_value
+- title: Play and scoring
+  desc: Trick mechanics and the outcome of a completed game.
+  contents:
+  - sk_legal_moves
+  - sk_trick_winner
+  - sk_count_points
+  - sk_score_game
+- title: Players
+  desc: Strategies that pick a card to play.
+  contents:
+  - sk_player
+  - sk_choose
+  - sk_mcts_move
+- title: Solver
+  desc: Exact double-dummy endgame analysis.
+  contents:
+  - sk_solve_dd
+- title: Simulation and visualisation
+  desc: Deal, play, repeat, and look at the results.
+  contents:
+  - sk_deal
+  - sk_play_game
+  - sk_simulate
+  - sk_plot_points
+  - sk_plot_winrate
+- title: Rulesets and app
+  desc: Rule variants and the interactive demo.
+  contents:
+  - sk_ruleset
+  - is_sk_ruleset
+  - sk_run_app

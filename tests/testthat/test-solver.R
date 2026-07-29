@@ -41,6 +41,23 @@ test_that("solver: a defender on lead can hold the declarer to nothing", {
   )
 })
 
+test_that("solver: the two-jacks sweep returns 46", {
+  # The build specification names this position as an acceptance criterion:
+  # the declarer holds both top jacks in a grand game, so both tricks and
+  # every point on the table are taken. Jacks score 2 each, the aces 11 each
+  # and the tens 10 each: 2 + 2 + 11 + 11 + 10 + 10 = 46 (not 42, which is
+  # what dropping the jacks' own points would give).
+  #
+  # The value was previously carried only by a roxygen example, which runs
+  # under R CMD check but asserts nothing, so a regression could not have
+  # been caught. It is pinned here instead.
+  sweep <- list(c("CJ", "SJ"), c("HA", "DA"), c("H10", "D10"))
+  expect_equal(
+    sk_solve_dd(sweep, game_type = "grand", declarer = 1),
+    46L
+  )
+})
+
 test_that("solver: a null-game position resolves without trumps", {
   # Null game, declarer on lead, holding the two lowest cards of two suits.
   # Nothing can beat a seven, so the declarer takes no trick.

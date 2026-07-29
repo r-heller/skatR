@@ -1,0 +1,172 @@
+---
+title: "Getting started with skatR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with skatR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+has_dplyr <- requireNamespace("dplyr", quietly = TRUE)
+```
+
+```{r setup}
+library(skatR)
+```
+
+Skat is a three-handed trick-taking game played across the German-speaking
+world. One player -- the *declarer* -- takes on the other two, having first won
+an auction for the right to name the game. This vignette walks through the
+package in the order the game itself unfolds: the deck, the ordering the game
+type imposes on it, the deal, the play, the bidding arithmetic, and finally
+simulation and exact analysis.
+
+## The deck
+
+Skat uses a 32-card deck: sevens through aces in four suits. The card points
+(jacks 2, queens 3, kings 4, tens 10, aces 11) sum to 120, and 61 of them wins
+a suit or grand game.
+
+```{r}
+sk_full_deck()
+sum(sk_points(sk_full_deck()))
+```
+
+## Trick-taking order depends on the game type
+
+This is where Skat differs most from other trick-taking games. In suit and
+grand games all four jacks are trumps, ranked clubs > spades > hearts >
+diamonds, and the jack of clubs is always the strongest card in the pack. In a
+suit game the named suit joins them as trumps below the jacks.
+
+```{r}
+tail(sk_card_order("grand"), 4)   # the strongest four cards
+sk_is_trump(c("CJ", "HJ", "HA"), game_type = "hearts")
+```
+
+Because a jack is a trump rather than a card of its printed suit, leading one
+demands a trump from the other players. `sk_effective_suit()` is the function
+that encodes this, using `"T"` for trump, and `sk_legal_moves()` applies it:
+
+```{r}
+sk_effective_suit(c("CJ", "HA", "D10"), game_type = "hearts")
+sk_legal_moves(c("HA", "H7", "CJ", "DA"), led = "SJ", game_type = "hearts")
+```
+
+Null games are the exception: no trumps at all, and the ten drops back to its
+natural place between the nine and the jack.
+
+```{r}
+head(sk_card_order("null"), 8)
+sk_trick_winner(c("H10", "HJ", "H9"), game_type = "null")
+```
+
+## Dealing and playing a game
+
+`sk_deal()` deals ten cards to each seat plus a two-card skat. `sk_play_game()`
+plays all ten tricks and scores the result.
+
+```{r}
+deal <- sk_deal(seed = 42)
+deal
+
+game <- sk_play_game(deal$hands, deal$skat, declarer = 1, game_type = "grand")
+game$result
+```
+
+The game object keeps the tricks, so the play can be inspected afterwards:
+
+```{r}
+game$tricks[[1]]
+game$declarer_points
+```
+
+## Bidding values
+
+The game value combines a base value (diamonds 9 up to grand 24) with a matador
+("Spitzen") multiplier: the unbroken run of top trumps the declarer holds, or
+lacks, counting down from the jack of clubs.
+
+```{r}
+sk_matadors(c("CJ", "SJ", "HA", "HK", "H10"), game_type = "hearts")
+sk_game_value(c("CJ", "SJ", "HA", "HK", "H10"), game_type = "hearts")
+```
+
+Null games ignore all of that and use four fixed values instead.
+
+```{r}
+sk_game_value(character(0), game_type = "null")
+sk_game_value(character(0), game_type = "null", ouvert = TRUE)
+```
+
+## Simulation
+
+`sk_simulate()` deals and plays many games, returning one tidy row per game.
+
+```{r, fig.width = 6, fig.height = 4}
+sim <- sk_simulate(n = 200, game_type = "grand", seed = 1, verbose = FALSE)
+mean(sim$won)
+sk_plot_points(sim)
+```
+
+Because the result is a plain tibble, summarising it needs nothing special:
+
+```{r, eval = has_dplyr}
+library(dplyr)
+
+sim |>
+  group_by(won) |>
+  summarise(games = n(), mean_points = mean(declarer_points))
+```
+
+Comparing game types is a matter of binding a few runs together:
+
+```{r, fig.width = 6, fig.height = 4}
+runs <- do.call(rbind, lapply(
+  c("grand", "clubs", "hearts"),
+  function(gt) sk_simulate(n = 100, game_type = gt, seed = 1, verbose = FALSE)
+))
+sk_plot_winrate(runs)
+```
+
+## Exact endgame analysis
+
+`sk_solve_dd()` computes, by exhaustive alpha-beta search in C++, the maximum
+card points the declarer can guarantee against perfect defence, given that
+every hand is known. The total includes the points on the declarer's own cards.
+
+```{r}
+hands <- list(c("CJ", "SA"), c("HA", "H9"), c("DA", "D9"))
+sk_solve_dd(hands, game_type = "grand", declarer = 1)
+```
+
+The search is exponential in the number of cards left, so it is a tool for
+endgames rather than whole deals. A two-trick hearts position, worked by hand
+below, is instant:
+
+```{r}
+# Declarer leads HJ (a trump); seat 2 must follow with H7 and seat 3, holding
+# no trump, throws its cheaper diamond. The declarer then leads C7 into seat
+# 2's ace and loses the second trick. Total: 2 + 0 + 10.
+sk_solve_dd(
+  list(c("HJ", "C7"), c("H7", "CA"), c("DA", "D10")),
+  game_type = "hearts", declarer = 1, leader = 1
+)
+```
+
+## Rule variants
+
+`sk_ruleset()` collects the options that separate tournament play from a casual
+round.
+
+```{r}
+sk_ruleset("tournament")
+sk_ruleset("casual", bock = TRUE)
+```
+
+## An interactive demo
+
+`sk_run_app()` launches a small Shiny application that runs simulations and
+plots the results; it needs the suggested **shiny** package.

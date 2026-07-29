@@ -9,6 +9,7 @@ sk_solve_dd(
   game_type,
   declarer,
   leader = declarer,
+  max_tricks = 8,
   call = rlang::caller_env()
 )
 }
@@ -23,6 +24,13 @@ the same number of cards, and no card may be held twice.}
 
 \item{leader}{Integer in \code{1:3}: the seat to lead the next trick. Defaults to
 \code{declarer}.}
+
+\item{max_tricks}{Maximum number of cards per hand the solver will accept,
+as a guard against accidentally launching an intractable search. Deeper
+positions raise an error rather than running. At the default of \code{8} a solve
+stays well under a second on ordinary hardware; each further trick
+multiplies the work several times over, and a whole ten-trick deal
+(\code{max_tricks = 10}) can take tens of seconds.}
 
 \item{call}{The calling environment, used for error reporting.}
 }
@@ -41,9 +49,10 @@ The returned total counts every card point in the tricks the declarer wins,
 including the points on the declarer's own cards. It does not include skat
 points, which are added afterwards by \code{\link[=sk_score_game]{sk_score_game()}}.
 
-The search is exponential in the number of remaining cards. It is practical
-for endgames (up to roughly the last five or six tricks per hand); solving a
-full ten-trick deal can be slow. The heavy lifting runs in compiled C++, and
+The search is exponential in the number of remaining cards, tempered by
+alpha-beta pruning, move ordering and a transposition table. It is practical
+for endgames; a full ten-trick deal can still take a very long time, which is
+what \code{max_tricks} guards against. The heavy lifting runs in compiled C++, and
 the search polls for user interrupts so a long solve can be cancelled.
 }
 \examples{
@@ -55,6 +64,12 @@ sk_solve_dd(hands, game_type = "grand", declarer = 1)
 # includes the two card points on the declarer's own jacks.
 sweep <- list(c("CJ", "SJ"), c("HA", "DA"), c("H10", "D10"))
 sk_solve_dd(sweep, game_type = "grand", declarer = 1)
+
+# A whole ten-trick deal is refused by default; raise the guard to solve it.
+\donttest{
+deal <- sk_deal(seed = 1)
+sk_solve_dd(deal$hands, game_type = "grand", declarer = 1, max_tricks = 10)
+}
 }
 \seealso{
 \code{\link[=sk_play_game]{sk_play_game()}} to play a deal out with heuristic players, and

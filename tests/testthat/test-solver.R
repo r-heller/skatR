@@ -176,6 +176,33 @@ test_that("solver: agrees with a plain minimax over the R rules engine", {
   }
 })
 
+test_that("solver: max_tricks refuses a position that is too deep", {
+  deal <- sk_deal(seed = 1)
+  hands <- lapply(deal$hands, as.character)
+  expect_error(sk_solve_dd(hands, "grand", declarer = 1), "too deep")
+  expect_error(
+    sk_solve_dd(hands, "grand", declarer = 1, max_tricks = 0),
+    "positive whole"
+  )
+
+  # Shrinking the position to the guard is the escape route the message
+  # suggests, and it works.
+  slice <- lapply(hands, function(h) h[7:10])
+  expect_type(sk_solve_dd(slice, "grand", declarer = 1), "integer")
+
+  # Raising the guard is the other route. It gates the position and nothing
+  # else: the same position solved under a higher guard gives the same answer.
+  five <- lapply(hands, function(h) h[6:10])
+  expect_error(
+    sk_solve_dd(five, "grand", declarer = 1, max_tricks = 4),
+    "too deep"
+  )
+  expect_equal(
+    sk_solve_dd(five, "grand", declarer = 1, max_tricks = 5),
+    sk_solve_dd(five, "grand", declarer = 1)
+  )
+})
+
 test_that("solver validates its position", {
   ok <- list(c("CJ", "SA"), c("HA", "H9"), c("DA", "D9"))
   expect_error(sk_solve_dd(ok[1:2], "grand", 1), "length-3 list")

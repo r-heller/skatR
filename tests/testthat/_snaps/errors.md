@@ -79,6 +79,16 @@
       ! `declarer` must be a seat number: 1, 2, or 3.
       x Got 9.
 
+---
+
+    Code
+      sk_solve_dd(lapply(sk_deal(seed = 1)$hands, as.character), "grand", 1)
+    Condition
+      Error:
+      ! This position is too deep for an exact solve.
+      x Each seat holds 10 cards, more than `max_tricks` = 8.
+      i Solve an endgame slice instead: keep the last 8 cards of each hand. Raise `max_tricks` only if you are prepared to wait; every extra trick costs roughly another order of magnitude.
+
 # scoring errors read well
 
     Code

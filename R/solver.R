@@ -9,9 +9,10 @@
 #' including the points on the declarer's own cards. It does not include skat
 #' points, which are added afterwards by [sk_score_game()].
 #'
-#' The search is exponential in the number of remaining cards. It is practical
-#' for endgames (up to roughly the last five or six tricks per hand); solving a
-#' full ten-trick deal can be slow. The heavy lifting runs in compiled C++, and
+#' The search is exponential in the number of remaining cards, tempered by
+#' alpha-beta pruning, move ordering and a transposition table. It is practical
+#' for endgames; a full ten-trick deal can still take a very long time, which is
+#' what `max_tricks` guards against. The heavy lifting runs in compiled C++, and
 #' the search polls for user interrupts so a long solve can be cancelled.
 #'
 #' @param hands A length-3 list of `sk_card` vectors (or character vectors of
@@ -21,6 +22,12 @@
 #' @param declarer Integer in `1:3`: the declaring seat.
 #' @param leader Integer in `1:3`: the seat to lead the next trick. Defaults to
 #'   `declarer`.
+#' @param max_tricks Maximum number of cards per hand the solver will accept,
+#'   as a guard against accidentally launching an intractable search. Deeper
+#'   positions raise an error rather than running. At the default of `8` a solve
+#'   stays well under a second on ordinary hardware; each further trick
+#'   multiplies the work several times over, and a whole ten-trick deal
+#'   (`max_tricks = 10`) can take tens of seconds.
 #' @param call The calling environment, used for error reporting.
 #'
 #' @return A single integer: the maximum card points (0-120) the declarer can
@@ -38,11 +45,18 @@
 #' # includes the two card points on the declarer's own jacks.
 #' sweep <- list(c("CJ", "SJ"), c("HA", "DA"), c("H10", "D10"))
 #' sk_solve_dd(sweep, game_type = "grand", declarer = 1)
+#'
+#' # A whole ten-trick deal is refused by default; raise the guard to solve it.
+#' \donttest{
+#' deal <- sk_deal(seed = 1)
+#' sk_solve_dd(deal$hands, game_type = "grand", declarer = 1, max_tricks = 10)
+#' }
 sk_solve_dd <- function(hands, game_type, declarer, leader = declarer,
-                        call = rlang::caller_env()) {
+                        max_tricks = 8, call = rlang::caller_env()) {
   .sk_check_choice(game_type, sk_game_types(), call = call)
   declarer <- .sk_check_seat(declarer, call = call)
   leader <- .sk_check_seat(leader, call = call)
+  max_tricks <- .sk_check_count(max_tricks, call = call)
   if (!is.list(hands) || length(hands) != 3L) {
     cli::cli_abort(
       c(
@@ -75,6 +89,23 @@ sk_solve_dd <- function(hands, game_type, declarer, leader = declarer,
       c(
         "Each card may be held by at most one seat.",
         "x" = "Duplicated card{?s}: {.val {dupes}}."
+      ),
+      call = call
+    )
+  }
+
+  # The position is well formed; is it small enough to be worth starting?
+  n_tricks <- sizes[[1]]
+  if (n_tricks > max_tricks) {
+    cli::cli_abort(
+      c(
+        "This position is too deep for an exact solve.",
+        "x" = "Each seat holds {n_tricks} cards, more than \\
+               {.arg max_tricks} = {max_tricks}.",
+        "i" = "Solve an endgame slice instead: keep the last {max_tricks} \\
+               card{?s} of each hand. Raise {.arg max_tricks} only if you are \\
+               prepared to wait; every extra trick costs roughly another order \\
+               of magnitude."
       ),
       call = call
     )

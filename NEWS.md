@@ -34,6 +34,7 @@
   | clubs, 8 cards each, `seed = 7` | 92.68 s | 0.119 s | 779x |
 
   Over the whole twenty-position sweep (four to eight cards per hand, grand and clubs, two deals each) the total falls from 164.3 s to 0.23 s, with every one of the twenty values unchanged. Small positions are no slower: the four-card ones come in at 0.4-0.6 ms either way. Whole ten-trick deals were never benchmarked on the old solver because they did not finish in reasonable time; twenty sampled deals now solve in 0.06-12.8 s, median 0.33 s.
+* `sk_solve_dd()` gains `max_tricks` (default 8), which rejects a position deeper than the given number of cards per hand instead of starting a search that may not finish. The error suggests slicing the endgame, and the guard can be raised to 10 to solve a whole deal.
 
 ### Simulation and visualisation
 * `sk_deal()`, `sk_play_game()`: deal and play out a single game.

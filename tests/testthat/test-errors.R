@@ -27,6 +27,10 @@ test_that("solver errors read well", {
     sk_solve_dd(list(c("CJ", "SA"), c("HA", "H9"), c("DA", "D9")), "grand", 9),
     error = TRUE
   )
+  expect_snapshot(
+    sk_solve_dd(lapply(sk_deal(seed = 1)$hands, as.character), "grand", 1),
+    error = TRUE
+  )
 })
 
 test_that("scoring errors read well", {

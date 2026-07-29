@@ -142,9 +142,9 @@ hands <- list(c("CJ", "SA"), c("HA", "H9"), c("DA", "D9"))
 sk_solve_dd(hands, game_type = "grand", declarer = 1)
 ```
 
-The search is exponential in the number of cards left, so it is a tool for
-endgames rather than whole deals. A two-trick hearts position, worked by hand
-below, is instant:
+The search is exponential in the number of cards left, so it is above all a
+tool for endgames. A two-trick hearts position, worked by hand below, is
+instant:
 
 ```{r}
 # Declarer leads HJ (a trump); seat 2 must follow with H7 and seat 3, holding
@@ -154,6 +154,18 @@ sk_solve_dd(
   list(c("HJ", "C7"), c("H7", "CA"), c("DA", "D10")),
   game_type = "hearts", declarer = 1, leader = 1
 )
+```
+
+Alpha-beta pruning, move ordering and a transposition table keep the cost down,
+but only so far, so `sk_solve_dd()` refuses positions deeper than `max_tricks`
+(eight cards per hand by default) rather than disappearing into a search you did
+not intend to start. Whole ten-trick deals are within reach if you raise the
+guard and are willing to wait: most solve in well under a second, awkward ones
+in tens of seconds.
+
+```{r}
+deal <- sk_deal(seed = 1)
+sk_solve_dd(deal$hands, game_type = "grand", declarer = 1, max_tricks = 10)
 ```
 
 ## Rule variants

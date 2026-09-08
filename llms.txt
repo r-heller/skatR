@@ -1,0 +1,191 @@
+# skatR
+
+**skatR** is a toolkit for analysing and simulating the German card game
+**Skat**. It provides a configurable rules engine (tournament and casual
+variants), bidding-value computation, players spanning rule-based
+heuristics through determinized Monte Carlo to an exact double-dummy
+solver, Monte Carlo simulation over many deals, and tidy analysis and
+visualisation of outcomes.
+
+## Installation
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("r-heller/skatR")
+```
+
+## Quick start
+
+Deal a hand and play it out. Every seat is a strategy object, so the
+same call covers random, heuristic, and search-based play.
+
+``` r
+
+library(skatR)
+
+deal <- sk_deal(seed = 42)
+game <- sk_play_game(deal$hands, deal$skat, declarer = 1, game_type = "grand")
+game$result
+#> <sk_result>: declarer lost
+#> • Game value: 96
+#> • Score: -192
+#> • Schneider: TRUE
+#> • Schwarz: FALSE
+```
+
+Repeat it a few hundred times to see how a configuration performs.
+
+``` r
+
+sim <- sk_simulate(n = 500, game_type = "grand", seed = 1, verbose = FALSE)
+mean(sim$won)
+#> [1] 0.242
+
+sk_plot_points(sim)
+```
+
+![Histogram of declarer card points across 500 simulated grand games,
+filled by whether the declarer won, with a dashed line at the 61-point
+winning threshold.](reference/figures/README-simulate-1.png)
+
+Or solve an endgame exactly. The double-dummy solver runs an alpha-beta
+search in C++ and returns the card points the declarer can guarantee
+against perfect defence.
+
+``` r
+
+hands <- list(c("CJ", "SA"), c("HA", "H9"), c("DA", "D9"))
+sk_solve_dd(hands, game_type = "grand", declarer = 1)
+#> [1] 35
+```
+
+## What is in the box
+
+| Area | Functions |
+|----|----|
+| Cards and ordering | [`sk_full_deck()`](https://r-heller.github.io/skatR/reference/sk_full_deck.md), [`sk_card()`](https://r-heller.github.io/skatR/reference/sk_card.md), [`sk_points()`](https://r-heller.github.io/skatR/reference/sk_points.md), [`sk_card_order()`](https://r-heller.github.io/skatR/reference/sk_card_order.md), [`sk_strength()`](https://r-heller.github.io/skatR/reference/sk_strength.md), [`sk_is_trump()`](https://r-heller.github.io/skatR/reference/sk_is_trump.md), [`sk_effective_suit()`](https://r-heller.github.io/skatR/reference/sk_effective_suit.md) |
+| Bidding | [`sk_base_value()`](https://r-heller.github.io/skatR/reference/sk_base_value.md), [`sk_matadors()`](https://r-heller.github.io/skatR/reference/sk_matadors.md), [`sk_game_value()`](https://r-heller.github.io/skatR/reference/sk_game_value.md) |
+| Play and scoring | [`sk_legal_moves()`](https://r-heller.github.io/skatR/reference/sk_legal_moves.md), [`sk_trick_winner()`](https://r-heller.github.io/skatR/reference/sk_trick_winner.md), [`sk_count_points()`](https://r-heller.github.io/skatR/reference/sk_count_points.md), [`sk_score_game()`](https://r-heller.github.io/skatR/reference/sk_score_game.md) |
+| Players | [`sk_player()`](https://r-heller.github.io/skatR/reference/sk_player.md), [`sk_choose()`](https://r-heller.github.io/skatR/reference/sk_choose.md), [`sk_mcts_move()`](https://r-heller.github.io/skatR/reference/sk_mcts_move.md) |
+| Solver | [`sk_solve_dd()`](https://r-heller.github.io/skatR/reference/sk_solve_dd.md) |
+| Simulation | [`sk_deal()`](https://r-heller.github.io/skatR/reference/sk_deal.md), [`sk_play_game()`](https://r-heller.github.io/skatR/reference/sk_play_game.md), [`sk_simulate()`](https://r-heller.github.io/skatR/reference/sk_simulate.md) |
+| Plots | [`sk_plot_points()`](https://r-heller.github.io/skatR/reference/sk_plot_points.md), [`sk_plot_winrate()`](https://r-heller.github.io/skatR/reference/sk_plot_winrate.md) |
+| Rules and demo | [`sk_ruleset()`](https://r-heller.github.io/skatR/reference/sk_ruleset.md), [`sk_run_app()`](https://r-heller.github.io/skatR/reference/sk_run_app.md) |
+
+[`vignette("skatR")`](https://r-heller.github.io/skatR/articles/skatR.md)
+walks through all of it in order.
+
+## License
+
+MIT (c) Raban Heller
+
+# Package index
+
+## Cards and ordering
+
+The 32-card deck, and how its cards rank under each game type.
+
+- [`sk_suits`](https://r-heller.github.io/skatR/reference/skat-constants.md)
+  [`sk_ranks`](https://r-heller.github.io/skatR/reference/skat-constants.md)
+  [`sk_card_points`](https://r-heller.github.io/skatR/reference/skat-constants.md)
+  : Skat card constants
+- [`sk_full_deck()`](https://r-heller.github.io/skatR/reference/sk_full_deck.md)
+  : A full 32-card Skat deck
+- [`sk_card()`](https://r-heller.github.io/skatR/reference/sk_card.md) :
+  Construct a Skat card
+- [`format(`*`<sk_card>`*`)`](https://r-heller.github.io/skatR/reference/format.sk_card.md)
+  [`print(`*`<sk_card>`*`)`](https://r-heller.github.io/skatR/reference/format.sk_card.md)
+  [`` `[`( ``*`<sk_card>`*`)`](https://r-heller.github.io/skatR/reference/format.sk_card.md)
+  : Format and print Skat cards
+- [`sk_suit_of()`](https://r-heller.github.io/skatR/reference/sk_suit_of.md)
+  : Extract the suit of a card
+- [`sk_rank_of()`](https://r-heller.github.io/skatR/reference/sk_rank_of.md)
+  : Extract the rank of a card
+- [`sk_points()`](https://r-heller.github.io/skatR/reference/sk_points.md)
+  : Card-point value of one or more cards
+- [`sk_game_types()`](https://r-heller.github.io/skatR/reference/sk_game_types.md)
+  : Game types
+- [`sk_card_order()`](https://r-heller.github.io/skatR/reference/sk_card_order.md)
+  : Trick-taking order for a game type
+- [`sk_strength()`](https://r-heller.github.io/skatR/reference/sk_strength.md)
+  : Numeric strength of cards under a game type
+- [`sk_is_trump()`](https://r-heller.github.io/skatR/reference/sk_is_trump.md)
+  : Test whether a card is a trump
+- [`sk_effective_suit()`](https://r-heller.github.io/skatR/reference/sk_effective_suit.md)
+  : The effective suit a card follows
+
+## Bidding
+
+Game values (Reizwerte) and the matador multiplier.
+
+- [`sk_base_value()`](https://r-heller.github.io/skatR/reference/sk_base_value.md)
+  : Base value of a game type
+- [`sk_matadors()`](https://r-heller.github.io/skatR/reference/sk_matadors.md)
+  : Count matadors (Spitzen)
+- [`sk_game_value()`](https://r-heller.github.io/skatR/reference/sk_game_value.md)
+  : Game value (Reizwert)
+
+## Play and scoring
+
+Trick mechanics and the outcome of a completed game.
+
+- [`sk_legal_moves()`](https://r-heller.github.io/skatR/reference/sk_legal_moves.md)
+  : Legal cards to play
+- [`sk_trick_winner()`](https://r-heller.github.io/skatR/reference/sk_trick_winner.md)
+  : Determine the winner of a completed trick
+- [`sk_count_points()`](https://r-heller.github.io/skatR/reference/sk_count_points.md)
+  : Total card points in a set of cards
+- [`sk_score_game()`](https://r-heller.github.io/skatR/reference/sk_score_game.md)
+  : Score a completed Skat game
+
+## Players
+
+Strategies that pick a card to play.
+
+- [`sk_player()`](https://r-heller.github.io/skatR/reference/sk_player.md)
+  : Create a Skat player
+- [`sk_choose()`](https://r-heller.github.io/skatR/reference/sk_choose.md)
+  : Ask a player to choose a card
+- [`sk_mcts_move()`](https://r-heller.github.io/skatR/reference/sk_mcts_move.md)
+  : Determinized Monte Carlo move selection
+
+## Solver
+
+Exact double-dummy endgame analysis.
+
+- [`sk_solve_dd()`](https://r-heller.github.io/skatR/reference/sk_solve_dd.md)
+  : Solve a double-dummy Skat endgame
+
+## Simulation and visualisation
+
+Deal, play, repeat, and look at the results.
+
+- [`sk_deal()`](https://r-heller.github.io/skatR/reference/sk_deal.md) :
+  Deal a Skat game
+- [`sk_play_game()`](https://r-heller.github.io/skatR/reference/sk_play_game.md)
+  : Play out a full Skat game
+- [`sk_simulate()`](https://r-heller.github.io/skatR/reference/sk_simulate.md)
+  : Simulate many Skat games
+- [`sk_plot_points()`](https://r-heller.github.io/skatR/reference/sk_plot_points.md)
+  : Plot the distribution of declarer card points
+- [`sk_plot_winrate()`](https://r-heller.github.io/skatR/reference/sk_plot_winrate.md)
+  : Plot win rate by game type
+
+## Rulesets and app
+
+Rule variants and the interactive demo.
+
+- [`sk_ruleset()`](https://r-heller.github.io/skatR/reference/sk_ruleset.md)
+  : Define a Skat ruleset
+- [`is_sk_ruleset()`](https://r-heller.github.io/skatR/reference/is_sk_ruleset.md)
+  : Test whether an object is a ruleset
+- [`sk_run_app()`](https://r-heller.github.io/skatR/reference/sk_run_app.md)
+  : Launch the skatR demo Shiny app
+
+# Articles
+
+### All vignettes
+
+- [Getting started with
+  skatR](https://r-heller.github.io/skatR/articles/skatR.md):

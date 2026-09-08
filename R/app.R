@@ -1,8 +1,13 @@
 #' Launch the skatR demo Shiny app
 #'
-#' Opens an interactive Shiny application for exploring simulations: pick a game
-#' type and player strategies, run a batch of games, and view the win rate and
-#' card-point distribution.
+#' Opens an interactive Shiny application with three tabs. *Simulate* runs a
+#' batch of games and reports the win rate, mean score and card-point
+#' distribution. *Deal & play* deals a game and steps through it card by card,
+#' showing every hand, the trick in progress and the final verdict.
+#' *Reference* lays out the trick-taking order, card points and game values for
+#' a chosen game type.
+#'
+#' Needs the `shiny` and `bslib` packages, both suggested rather than required.
 #'
 #' @param call The calling environment, used for error reporting.
 #'
@@ -18,11 +23,16 @@
 #' }
 #' }
 sk_run_app <- function(call = rlang::caller_env()) {
-  if (!requireNamespace("shiny", quietly = TRUE)) {
+  needed <- c("shiny", "bslib")
+  missing <- needed[!vapply(
+    needed, requireNamespace, logical(1), quietly = TRUE
+  )]
+  if (length(missing) > 0L) {
     cli::cli_abort(
       c(
-        "The {.pkg shiny} package is required to run the demo app.",
-        "i" = "Install it with {.code install.packages(\"shiny\")}."
+        "The {.pkg {missing}} package{?s} {?is/are} required to run the demo \\
+         app.",
+        "i" = "Install {?it/them} with {.code install.packages()}."
       ),
       call = call
     )

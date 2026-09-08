@@ -33,6 +33,19 @@ sk_card_points <- c(
 # Human-readable suit labels, used only for printing.
 .sk_suit_labels <- c(C = "\u2663", S = "\u2660", H = "\u2665", D = "\u2666")
 
+# Reading order for a hand: suit blocks clubs, spades, hearts, diamonds, and
+# within a suit the descending rank a player fans their cards in. Trick-taking
+# order depends on the game type, which `print()` does not know, so this is a
+# display order only -- see `sk_card_order()` for the order that plays.
+.sk_display_ranks <- c("A", "10", "K", "Q", "J", "9", "8", "7")
+
+.sk_display_order <- function(codes) {
+  order(
+    match(sk_suit_of(codes), sk_suits),
+    match(sk_rank_of(codes), .sk_display_ranks)
+  )
+}
+
 # The 32 deck codes, in suit-then-rank order. Built once at load time because
 # validation and the solver consult it on every call.
 .sk_deck_codes <- paste0(
@@ -143,9 +156,10 @@ sk_full_deck <- function() {
 #' @param ... Ignored; present for consistency with the S3 generics.
 #'
 #' @return `format()` returns a character vector of pretty card labels, the same
-#'   length as `x`. `print()` returns `x` invisibly and is called for the side
-#'   effect of printing. `[` returns an `sk_card` object, so subsetting a hand
-#'   stays a hand.
+#'   length as `x`, in the order `x` holds them. `print()` returns `x` invisibly
+#'   and is called for the side effect of printing; it sorts the cards into suit
+#'   blocks for reading, the way a player fans a hand, while `x` itself keeps its
+#'   order. `[` returns an `sk_card` object, so subsetting a hand stays a hand.
 #' @export
 #' @family card functions
 #' @examples
@@ -170,10 +184,22 @@ print.sk_card <- function(x, ...) {
     cli::cli_text("{.cls sk_card}: no cards")
     return(invisible(x))
   }
-  cli::cli_text(
-    "{.strong {n} Skat card{?s}}: {paste(format(x), collapse = ' ')}"
-  )
+  line <- .sk_hand_line(x)
+  cli::cli_text("{.strong {n} Skat card{?s}}: {line}")
   invisible(x)
+}
+
+# A hand on one line: sorted into suit blocks, divided by a middle dot so the
+# eye can count a suit without reading every card. cli collapses runs of spaces,
+# so the divider has to be a visible character rather than a wider gap.
+.sk_hand_line <- function(x) {
+  codes <- as.character(x)
+  if (length(codes) == 0L) return("")
+  ord <- .sk_display_order(codes)
+  labels <- format(x)[ord]
+  suits <- sk_suit_of(codes)[ord]
+  breaks <- c(FALSE, suits[-1] != suits[-length(suits)])
+  paste(paste0(ifelse(breaks, "\u00b7 ", ""), labels), collapse = " ")
 }
 
 #' @rdname format.sk_card

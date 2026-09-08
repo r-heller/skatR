@@ -1,0 +1,428 @@
+/* skatR demo app: card table, stat row and reference tables.
+   Colours match the package palette (accent #5E2C8E, ink #2B2536). */
+
+:root {
+  --sk-accent: #5E2C8E;
+  --sk-accent-soft: #F3EDF9;
+  --sk-ink: #2B2536;
+  --sk-mid: #6B6478;
+  --sk-line: #E5E2EB;
+  --sk-red: #B3261E;
+}
+
+body {
+  background-color: #FAF9FC;
+}
+
+/* --- brand -------------------------------------------------------------- */
+
+.sk-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.sk-brand-logo {
+  height: 30px;
+  width: auto;
+}
+
+.sk-brand-name {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.sk-brand-tag {
+  font-size: 0.78rem;
+  font-weight: 400;
+  opacity: 0.72;
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
+  padding-left: 0.55rem;
+}
+
+/* --- stat row ----------------------------------------------------------- */
+
+.sk-stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sk-stat-row-tight {
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+}
+
+.sk-stat {
+  background: #FFFFFF;
+  border: 1px solid var(--sk-line);
+  border-radius: 0.55rem;
+  border-top: 3px solid var(--sk-accent);
+  padding: 0.6rem 0.8rem 0.65rem;
+}
+
+.sk-stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sk-mid);
+}
+
+.sk-stat-value {
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--sk-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.sk-stat-sub {
+  font-size: 0.78rem;
+  color: var(--sk-mid);
+}
+
+/* --- cards -------------------------------------------------------------- */
+
+.sk-hand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+}
+
+.sk-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 1px solid #D8D3E0;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(43, 37, 54, 0.10);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  user-select: none;
+}
+
+.sk-card.sk-sm {
+  width: 34px;
+  height: 46px;
+}
+
+.sk-card.sk-lg {
+  width: 52px;
+  height: 70px;
+}
+
+.sk-sm .sk-rank {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.sk-sm .sk-suit {
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.sk-lg .sk-rank {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.sk-lg .sk-suit {
+  font-size: 1.2rem;
+  margin-top: 3px;
+}
+
+.sk-red {
+  color: var(--sk-red);
+}
+
+.sk-black {
+  color: var(--sk-ink);
+}
+
+.sk-spent {
+  opacity: 0.24;
+  box-shadow: none;
+}
+
+.sk-took {
+  border-color: var(--sk-accent);
+  box-shadow: 0 0 0 2px var(--sk-accent);
+}
+
+.sk-slot {
+  border-style: dashed;
+  border-color: #D8D3E0;
+  background: #FBFAFD;
+  box-shadow: none;
+}
+
+.sk-gap {
+  display: inline-block;
+  width: 9px;
+}
+
+/* --- seats -------------------------------------------------------------- */
+
+.sk-seat {
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  margin-bottom: 0.35rem;
+}
+
+.sk-seat-declarer {
+  background: var(--sk-accent-soft);
+  border-color: #E1D6EF;
+}
+
+.sk-seat-skat {
+  border-top: 1px dashed var(--sk-line);
+  border-radius: 0;
+  margin-top: 0.35rem;
+  padding-top: 0.7rem;
+}
+
+.sk-seat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.sk-seat-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--sk-ink);
+}
+
+.sk-seat-meta {
+  font-size: 0.78rem;
+  color: var(--sk-mid);
+  margin-left: auto;
+}
+
+.sk-badge {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: var(--sk-accent);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+}
+
+.sk-badge-quiet {
+  color: var(--sk-mid);
+  background: #EDEBF1;
+}
+
+/* --- trick -------------------------------------------------------------- */
+
+.sk-trick-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.sk-trick-no {
+  font-weight: 700;
+  color: var(--sk-ink);
+}
+
+.sk-trick-meta {
+  font-size: 0.8rem;
+  color: var(--sk-mid);
+  margin-left: auto;
+}
+
+.sk-trick {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.sk-play {
+  text-align: center;
+}
+
+.sk-play-seat {
+  font-size: 0.75rem;
+  color: var(--sk-mid);
+  margin-top: 0.3rem;
+}
+
+.sk-play-took .sk-play-seat {
+  color: var(--sk-accent);
+  font-weight: 700;
+}
+
+.sk-trick-foot {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--sk-mid);
+}
+
+/* --- verdict ------------------------------------------------------------ */
+
+.sk-verdict {
+  border-radius: 0.5rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--sk-line);
+  border-left: 4px solid var(--sk-mid);
+  background: #FBFAFD;
+}
+
+.sk-verdict-won {
+  border-left-color: var(--sk-accent);
+  background: var(--sk-accent-soft);
+}
+
+.sk-verdict-lost {
+  border-left-color: #E29A2D;
+  background: #FDF6EA;
+}
+
+.sk-verdict-head {
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.sk-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.9rem;
+  row-gap: 0.15rem;
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.sk-dl dt {
+  color: var(--sk-mid);
+  font-weight: 500;
+}
+
+.sk-dl dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- reference ---------------------------------------------------------- */
+
+.sk-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--sk-mid);
+  margin-bottom: 0.6rem;
+}
+
+.sk-legend-arrow {
+  color: var(--sk-accent);
+}
+
+.sk-order {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sk-order-cell {
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.sk-order-trump {
+  background: var(--sk-accent-soft);
+  box-shadow: inset 0 0 0 1px #E1D6EF;
+}
+
+.sk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.sk-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sk-mid);
+  font-weight: 700;
+  border-bottom: 1px solid var(--sk-line);
+  padding: 0.3rem 0.5rem 0.35rem 0;
+}
+
+.sk-table td {
+  padding: 0.28rem 0.5rem 0.28rem 0;
+  border-bottom: 1px solid #F1EFF5;
+  vertical-align: middle;
+}
+
+.sk-table .sk-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding-right: 0.9rem;
+}
+
+.sk-table-total td {
+  font-weight: 700;
+  border-bottom: none;
+  border-top: 1px solid var(--sk-line);
+}
+
+/* --- notes and empty state ---------------------------------------------- */
+
+.sk-note {
+  font-size: 0.8rem;
+  color: var(--sk-mid);
+  margin-top: 0.85rem;
+  line-height: 1.45;
+}
+
+.sk-note-inline {
+  margin-top: 0.5rem;
+}
+
+.sk-empty {
+  border: 1px dashed #D8D3E0;
+  border-radius: 0.55rem;
+  background: #FFFFFF;
+  padding: 1.6rem;
+  text-align: center;
+  color: var(--sk-mid);
+  margin-bottom: 1rem;
+}
+
+.sk-empty p {
+  margin: 0;
+  max-width: 46ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Shiny's slider label and the animate button, toned down to match. */
+
+.irs--shiny .irs-bar,
+.irs--shiny .irs-handle > i:first-child {
+  background: var(--sk-accent);
+  border-color: var(--sk-accent);
+}
+
+.irs--shiny .irs-single,
+.irs--shiny .irs-from,
+.irs--shiny .irs-to {
+  background-color: var(--sk-accent);
+}
+
+.slider-animate-button {
+  font-size: 0.8rem;
+  color: var(--sk-accent);
+}

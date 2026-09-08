@@ -143,11 +143,20 @@ sk_play_game <- function(hands, skat, declarer, game_type,
 
 #' @export
 print.sk_game <- function(x, ...) {
-  cli::cli_text("{.cls sk_game}: {x$game_type}, declarer P{x$declarer}")
+  outcome <- if (x$result$won) "won" else "lost"
+  schneider <- .sk_yesno(x$result$schneider)
+  schwarz <- .sk_yesno(x$result$schwarz)
   cli::cli_text(
-    "Declarer took {x$tricks_won} trick{?s} for {x$declarer_points} card \\
-     point{?s}."
+    "{.cls sk_game}: {x$game_type}, declarer P{x$declarer} \\
+     {.strong {outcome}}"
   )
-  print(x$result)
+  cli::cli_bullets(c(
+    "*" = "Tricks: {x$tricks_won} of 10",
+    "*" = "Card points: {x$declarer_points} of 120",
+    "*" = "Game value: {x$result$game_value}",
+    "*" = "Score: {x$result$score}",
+    "*" = "Schneider: {schneider}",
+    "*" = "Schwarz: {schwarz}"
+  ))
   invisible(x)
 }

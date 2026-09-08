@@ -51,11 +51,17 @@ sk_deal <- function(seed = NULL, call = rlang::caller_env()) {
 
 #' @export
 print.sk_deal <- function(x, ...) {
-  cli::cli_text("{.cls sk_deal}")
-  for (p in seq_len(3L)) {
-    cli::cli_text("Player {p}: {paste(format(x$hands[[p]]), collapse = ' ')}")
+  cli::cli_text("{.cls sk_deal}: three ten-card hands and the two-card skat")
+  # Written verbatim, in columns: cli_text collapses runs of spaces, and a deal
+  # is easier to read when the point totals line up under each other.
+  rows <- c(x$hands, list(x$skat))
+  labels <- c("Player 1", "Player 2", "Player 3", "Skat")
+  for (i in seq_along(rows)) {
+    cli::cli_verbatim(sprintf(
+      "%-8s %3d pts  %s",
+      labels[[i]], sk_count_points(rows[[i]]), .sk_hand_line(rows[[i]])
+    ))
   }
-  cli::cli_text("Skat: {paste(format(x$skat), collapse = ' ')}")
   invisible(x)
 }
 

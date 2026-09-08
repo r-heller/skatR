@@ -86,12 +86,17 @@ new_sk_result <- function(won, schneider, schwarz, game_value, score) {
 #' @export
 print.sk_result <- function(x, ...) {
   outcome <- if (x$won) "won" else "lost"
+  schneider <- .sk_yesno(x$schneider)
+  schwarz <- .sk_yesno(x$schwarz)
   cli::cli_text("{.cls sk_result}: declarer {.strong {outcome}}")
   cli::cli_bullets(c(
     "*" = "Game value: {x$game_value}",
     "*" = "Score: {x$score}",
-    "*" = "Schneider: {x$schneider}",
-    "*" = "Schwarz: {x$schwarz}"
+    "*" = "Schneider: {schneider}",
+    "*" = "Schwarz: {schwarz}"
   ))
   invisible(x)
 }
+
+# Logical flags read better as words than as TRUE/FALSE in printed output.
+.sk_yesno <- function(x) if (isTRUE(x)) "yes" else "no"

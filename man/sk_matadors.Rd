@@ -9,7 +9,8 @@ sk_matadors(hand, game_type, call = rlang::caller_env())
 \arguments{
 \item{hand}{An \code{sk_card} object or character vector: the declarer's cards. For
 an authentic count this should include the two skat cards the declarer
-picked up (12 cards); for a hand game use the 10 dealt cards.}
+owns (12 cards), including the unseen skat in a completed hand game.
+A count from only the ten known cards is a bidding estimate, not final scoring.}
 
 \item{game_type}{A single suit or grand game type (not \code{"null"}).}
 

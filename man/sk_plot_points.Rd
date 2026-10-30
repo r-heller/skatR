@@ -9,7 +9,10 @@ sk_plot_points(sim, bins = 24, call = rlang::caller_env())
 \arguments{
 \item{sim}{A simulation tibble from \code{\link[=sk_simulate]{sk_simulate()}}.}
 
-\item{bins}{Number of histogram bins. Defaults to 24.}
+\item{bins}{Approximate number of histogram bins across the 0-120 point
+range. Defaults to 24 (five points wide). Bin edges are anchored on 61, so
+no bin straddles the winning threshold and each bar of a suit or grand
+simulation is a single colour.}
 
 \item{call}{The calling environment, used for error reporting.}
 }
@@ -18,8 +21,9 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object, which can be printed, 
 \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}, or extended with further layers.
 }
 \description{
-Draws a histogram of the declarer's card points across a simulation, filled
-by outcome, with the 61-point winning threshold marked.
+Draws a histogram of the declarer's card points across a simulation, split by
+outcome, on the full 0-120 point scale with the 61-point winning threshold
+marked.
 }
 \examples{
 sim <- sk_simulate(n = 50, seed = 1, verbose = FALSE)

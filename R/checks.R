@@ -41,8 +41,8 @@
 
 .sk_check_count <- function(x, arg = rlang::caller_arg(x),
                             call = rlang::caller_env()) {
-  if (!is.numeric(x) || length(x) != 1L || is.na(x) || x < 1 ||
-      x != as.integer(x)) {
+  if (!is.numeric(x) || length(x) != 1L || !is.finite(x) || x < 1 ||
+      x != trunc(x) || x > .Machine$integer.max) {
     cli::cli_abort(
       "{.arg {arg}} must be a single positive whole number.",
       call = call
@@ -68,7 +68,7 @@
 # Any single whole number, including zero and negatives (used for RNG seeds).
 .sk_check_whole <- function(x, arg = rlang::caller_arg(x),
                             call = rlang::caller_env()) {
-  if (!is.numeric(x) || length(x) != 1L || is.na(x) ||
+  if (!is.numeric(x) || length(x) != 1L || !is.finite(x) ||
       x != trunc(x) || abs(x) > .Machine$integer.max) {
     cli::cli_abort(
       "{.arg {arg}} must be a single whole number.",
@@ -145,10 +145,10 @@
 # A single card-point total in 0:120.
 .sk_check_card_points <- function(x, arg = rlang::caller_arg(x),
                                   call = rlang::caller_env()) {
-  if (!is.numeric(x) || length(x) != 1L || is.na(x) || x < 0 || x > 120) {
+  if (!is.numeric(x) || length(x) != 1L || !is.finite(x) || x != trunc(x) || x < 0 || x > 120) {
     cli::cli_abort(
       c(
-        "{.arg {arg}} must be a single number between 0 and 120.",
+        "{.arg {arg}} must be a single whole number between 0 and 120.",
         "i" = "The 32 cards of a Skat deck hold 120 card points in total."
       ),
       call = call

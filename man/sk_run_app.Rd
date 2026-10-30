@@ -14,9 +14,15 @@ Invisible \code{NULL}, called for the side effect of launching a Shiny
 application in the default browser.
 }
 \description{
-Opens an interactive Shiny application for exploring simulations: pick a game
-type and player strategies, run a batch of games, and view the win rate and
-card-point distribution.
+Opens an interactive Shiny application with three tabs. \emph{Simulate} runs a
+batch of games and reports the win rate, mean score and card-point
+distribution. \emph{Deal & play} deals a game and steps through it card by card,
+showing every hand, the trick in progress and the final verdict.
+\emph{Reference} lays out the trick-taking order, card points and game values for
+a chosen game type.
+}
+\details{
+Needs the \code{shiny} and \code{bslib} packages, both suggested rather than required.
 }
 \examples{
 \donttest{

@@ -11,7 +11,9 @@ sk_game_value(
   schneider = FALSE,
   schwarz = FALSE,
   ouvert = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE
 )
 }
 \arguments{
@@ -23,13 +25,19 @@ for matador counting.}
 \item{hand_game}{Logical; \code{TRUE} if played as a hand game (skat not picked
 up). Defaults to \code{FALSE}.}
 
-\item{schneider}{Logical; announced schneider. Defaults to \code{FALSE}.}
+\item{schneider}{Logical; either party achieved schneider. Defaults to \code{FALSE}.}
 
-\item{schwarz}{Logical; announced schwarz. Defaults to \code{FALSE}.}
+\item{schwarz}{Logical; either party achieved schwarz (also implies schneider).
+Defaults to \code{FALSE}.}
 
-\item{ouvert}{Logical; open (ouvert) game. Defaults to \code{FALSE}.}
+\item{ouvert}{Logical; open (ouvert) game. For suit/grand, implies hand,
+schneider announced and schwarz announced. Defaults to \code{FALSE}.}
 
 \item{call}{The calling environment, used for error reporting.}
+
+\item{schneider_announced, schwarz_announced}{Logical; additional announced
+levels in a hand game. Schwarz announced implies schneider announced.
+Announcements include their required achieved levels in the scoring value.}
 }
 \value{
 A single integer game value. Null games return one of the four fixed
@@ -37,8 +45,8 @@ values 23, 35, 46, or 59.
 }
 \description{
 Computes the value of a declared game: for suit and grand games, the base
-value times the multiplier (matadors + 1, plus one for game, plus levels for
-hand, schneider, schwarz, ouvert as announced). Null games use their fixed
+value times the multiplier (matadors + one for game, plus levels for
+hand, achieved/announced schneider and schwarz, and ouvert). Null games use fixed
 values.
 }
 \examples{

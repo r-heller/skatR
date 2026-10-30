@@ -49,14 +49,14 @@ test_that("declarer_points is the total the result was scored on", {
   expect_equal(g$result$won, g$declarer_points >= 61L)
 })
 
-test_that("a hand game leaves the skat points out", {
+test_that("a hand game credits skat points under ISkO 2.5.4", {
   d <- sk_deal(seed = 11)
   g <- sk_play_game(d$hands, d$skat, declarer = 2, game_type = "clubs",
                     hand_game = TRUE)
   trick_pts <- sum(vapply(g$tricks, function(tr) {
     if (tr$winner == 2L) tr$points else 0L
   }, integer(1)))
-  expect_equal(g$declarer_points, trick_pts)
+  expect_equal(g$declarer_points, trick_pts + sk_count_points(d$skat))
 })
 
 test_that("every trick is legal and has one winner", {

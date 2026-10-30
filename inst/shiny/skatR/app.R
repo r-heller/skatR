@@ -554,7 +554,7 @@ server <- function(input, output, session) {
         shiny::tags$td(names(SK_TYPE_CHOICES)[match(types[[i]],
                                                     SK_TYPE_CHOICES)]),
         shiny::tags$td(class = "sk-num", base[[i]]),
-        shiny::tags$td("base x (matadors + 1), plus announcements")
+        shiny::tags$td("base x (matadors + 1 + achieved/announced levels)")
       )
     })
     shiny::tags$table(

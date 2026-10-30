@@ -95,7 +95,7 @@
       sk_score_game(200, "grand", 24)
     Condition
       Error:
-      ! `declarer_points` must be a single number between 0 and 120.
+      ! `declarer_points` must be a single whole number between 0 and 120.
       i The 32 cards of a Skat deck hold 120 card points in total.
 
 ---

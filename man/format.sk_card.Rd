@@ -21,9 +21,10 @@
 }
 \value{
 \code{format()} returns a character vector of pretty card labels, the same
-length as \code{x}. \code{print()} returns \code{x} invisibly and is called for the side
-effect of printing. \code{[} returns an \code{sk_card} object, so subsetting a hand
-stays a hand.
+length as \code{x}, in the order \code{x} holds them. \code{print()} returns \code{x} invisibly
+and is called for the side effect of printing; it sorts the cards into suit
+blocks for reading, the way a player fans a hand, while \code{x} itself keeps its
+order. \code{[} returns an \code{sk_card} object, so subsetting a hand stays a hand.
 }
 \description{
 Renders card codes with their suit symbols, so \code{"CA"} prints as the ace of

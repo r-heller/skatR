@@ -12,7 +12,10 @@ sk_play_game(
   players = NULL,
   game_value = NULL,
   hand_game = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE,
+  ouvert = FALSE
 )
 }
 \arguments{
@@ -20,7 +23,7 @@ sk_play_game(
 \code{\link[=sk_deal]{sk_deal()}}.}
 
 \item{skat}{An \code{sk_card} vector of length 2 (the skat). Its points are
-credited to the declarer for non-hand games.}
+credited to the declarer in suit and grand games, including hand games.}
 
 \item{declarer}{Integer in \code{1:3}: the declaring player.}
 
@@ -29,13 +32,20 @@ credited to the declarer for non-hand games.}
 \item{players}{A length-3 list of \code{sk_player} objects, one per seat. Defaults
 to heuristic players for all seats.}
 
-\item{game_value}{The announced game value. If \code{NULL} (default) it is computed
-from the declarer's hand plus skat.}
+\item{game_value}{Optional complete scoring value. If \code{NULL} (default), it
+is computed from the original hand plus skat and achieved/announced levels.
+This is not a bid; overbidding must be resolved by the caller.}
 
 \item{hand_game}{Logical; whether the skat was left untouched. Defaults to
 \code{FALSE}.}
 
 \item{call}{The calling environment, used for error reporting.}
+
+\item{schneider_announced, schwarz_announced}{Logical announcements, valid
+only for suit/grand hand games. Failure to achieve the level loses the game.}
+
+\item{ouvert}{Logical; open play. Suit/grand ouvert implies hand and both
+announcements and requires every trick; null ouvert still requires no trick.}
 }
 \value{
 An object of class \code{sk_game}: a list with elements
@@ -46,7 +56,7 @@ An object of class \code{sk_game}: a list with elements
 \item \code{declarer}: the declaring seat,
 \item \code{game_type}: the game type played,
 \item \code{declarer_points}: the integer card points credited to the declarer,
-trick points plus skat points for a non-hand game -- the same total the
+trick points plus skat points, including hand games -- the same total the
 result was scored on,
 \item \code{tricks_won}: the integer number of tricks the declarer took.
 }

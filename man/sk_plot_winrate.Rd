@@ -18,7 +18,7 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object, which can be printed, 
 }
 \description{
 Summarises one or more simulation tibbles into a bar chart of the declarer's
-win rate per game type, ordered from worst to best.
+win rate per game type, best at the top.
 }
 \examples{
 a <- sk_simulate(n = 40, game_type = "grand", seed = 1, verbose = FALSE)

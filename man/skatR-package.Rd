@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
 
-A toolkit for the German card game Skat. Provides a configurable rules engine supporting both official tournament rules and common casual variants, bidding value computation, players ranging from rule-based heuristics through determinized Monte Carlo search to an exact double-dummy solver, Monte Carlo simulation over many deals, and tidy analysis and visualisation of outcomes. Card play, scoring and game-value calculation follow the standard 32-card Skat deck.
+A toolkit for the German card game Skat. Provides a configurable card-play engine with suit, grand and null scoring, bidding-value computation, descriptive ruleset metadata, and players ranging from rule-based heuristics through determinized Monte Carlo search to an exact double-dummy solver, Monte Carlo simulation over many deals, and tidy analysis and visualisation of outcomes. Card play, scoring and game-value calculation follow the standard 32-card Skat deck.
 }
 \seealso{
 Useful links:

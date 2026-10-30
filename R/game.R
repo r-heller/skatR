@@ -8,16 +8,21 @@
 #' @param hands A length-3 list of `sk_card` vectors (ten cards each), as from
 #'   [sk_deal()].
 #' @param skat An `sk_card` vector of length 2 (the skat). Its points are
-#'   credited to the declarer for non-hand games.
+#'   credited to the declarer in suit and grand games, including hand games.
 #' @param declarer Integer in `1:3`: the declaring player.
 #' @param game_type A single game-type string, one of [sk_game_types()].
 #' @param players A length-3 list of `sk_player` objects, one per seat. Defaults
 #'   to heuristic players for all seats.
-#' @param game_value The announced game value. If `NULL` (default) it is computed
-#'   from the declarer's hand plus skat.
+#' @param game_value Optional complete scoring value. If `NULL` (default), it
+#'   is computed from the original hand plus skat and achieved/announced levels.
+#'   This is not a bid; overbidding must be resolved by the caller.
 #' @param hand_game Logical; whether the skat was left untouched. Defaults to
 #'   `FALSE`.
 #' @param call The calling environment, used for error reporting.
+#' @param schneider_announced,schwarz_announced Logical announcements, valid
+#'   only for suit/grand hand games. Failure to achieve the level loses the game.
+#' @param ouvert Logical; open play. Suit/grand ouvert implies hand and both
+#'   announcements and requires every trick; null ouvert still requires no trick.
 #'
 #' @return An object of class `sk_game`: a list with elements
 #'   * `result`: an `sk_result` object from [sk_score_game()],
@@ -26,7 +31,7 @@
 #'   * `declarer`: the declaring seat,
 #'   * `game_type`: the game type played,
 #'   * `declarer_points`: the integer card points credited to the declarer,
-#'     trick points plus skat points for a non-hand game -- the same total the
+#'     trick points plus skat points, including hand games -- the same total the
 #'     result was scored on,
 #'   * `tricks_won`: the integer number of tricks the declarer took.
 #' @export
@@ -40,7 +45,9 @@
 #' g$declarer_points
 sk_play_game <- function(hands, skat, declarer, game_type,
                          players = NULL, game_value = NULL,
-                         hand_game = FALSE, call = rlang::caller_env()) {
+                         hand_game = FALSE, call = rlang::caller_env(),
+                         schneider_announced = FALSE, schwarz_announced = FALSE,
+                         ouvert = FALSE) {
   .sk_check_choice(game_type, sk_game_types(), call = call)
   .sk_check_flag(hand_game, call = call)
   if (!is.list(hands) || length(hands) != 3L) {
@@ -82,16 +89,14 @@ sk_play_game <- function(hands, skat, declarer, game_type,
     )
   }
 
-  # Compute the game value up front, from the declarer's original cards plus
-  # skat, before any cards are played.
-  if (is.null(game_value)) {
-    game_value <- if (identical(game_type, "null")) {
-      sk_game_value(character(0), "null", hand_game = hand_game, call = call)
-    } else {
-      sk_game_value(c(hands[[declarer]], skat), game_type,
-                    hand_game = hand_game, call = call)
-    }
-  }
+  if (length(skat) != 2L || anyDuplicated(c(unlist(hands, use.names = FALSE), skat)))
+    cli::cli_abort("hands and skat must contain each of the 32 cards exactly once.", call = call)
+  original_cards <- c(hands[[declarer]], skat)
+  # Validate the contract before any player runs or cards are removed.
+  sk_game_value(original_cards, game_type, hand_game=hand_game, ouvert=ouvert,
+                schneider_announced=schneider_announced,
+                schwarz_announced=schwarz_announced, call=call)
+  if (!is.null(game_value)) .sk_check_count(game_value, call=call)
 
   leader <- 1L  # forehand leads the first trick
   tricks <- vector("list", 10L)
@@ -122,14 +127,22 @@ sk_play_game <- function(hands, skat, declarer, game_type,
     leader <- winner_seat
   }
 
-  skat_pts <- if (hand_game) 0L else sk_count_points(skat)
+  skat_pts <- sk_count_points(skat)
   total_declarer_pts <- declarer_trick_points + skat_pts
 
+  if (is.null(game_value)) {
+    game_value <- sk_game_value(original_cards, game_type, hand_game=hand_game,
+      schneider=total_declarer_pts >= 90L || total_declarer_pts <= 30L,
+      schwarz=declarer_tricks_won %in% c(0L,10L), ouvert=ouvert,
+      schneider_announced=schneider_announced, schwarz_announced=schwarz_announced,
+      call=call)
+  }
   result <- sk_score_game(
     total_declarer_pts, game_type, game_value,
     declarer_won_all = declarer_tricks_won == 10L,
     declarer_lost_all = declarer_tricks_won == 0L,
-    call = call
+    schneider_announced=schneider_announced, schwarz_announced=schwarz_announced,
+    ouvert=ouvert, call = call
   )
 
   structure(

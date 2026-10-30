@@ -10,16 +10,20 @@ sk_score_game(
   game_value,
   declarer_won_all = FALSE,
   declarer_lost_all = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE,
+  ouvert = FALSE
 )
 }
 \arguments{
 \item{declarer_points}{Card points (0-120) the declarer collected in tricks,
-including any points in the skat for a non-hand game.}
+including the skat, even in a hand game.}
 
 \item{game_type}{A single game-type string, one of \code{\link[=sk_game_types]{sk_game_types()}}.}
 
-\item{game_value}{The announced/bid game value (see \code{\link[=sk_game_value]{sk_game_value()}}).}
+\item{game_value}{The complete value including achieved/announced levels
+(see \code{\link[=sk_game_value]{sk_game_value()}}). It is not a bid; overbidding is resolved externally.}
 
 \item{declarer_won_all}{Logical; \code{TRUE} if the declarer took every trick
 (relevant for schwarz). Defaults to \code{FALSE}.}
@@ -28,6 +32,12 @@ including any points in the skat for a non-hand game.}
 Defaults to \code{FALSE}. For null games this determines the outcome directly.}
 
 \item{call}{The calling environment, used for error reporting.}
+
+\item{schneider_announced, schwarz_announced}{Logical; contract requirements.
+Schwarz announced implies schneider announced. Defaults to \code{FALSE}.}
+
+\item{ouvert}{Logical; suit/grand ouvert requires every trick. Null ouvert
+retains the no-trick objective. Defaults to \code{FALSE}.}
 }
 \value{
 A list of class \code{sk_result} with elements:
@@ -36,14 +46,14 @@ A list of class \code{sk_result} with elements:
 \item \code{schneider}: logical, was schneider reached (declarer to 90 or defence
 held to 30);
 \item \code{schwarz}: logical, was schwarz reached (one side took every trick);
-\item \code{game_value}: integer, the announced value;
+\item \code{game_value}: integer, the complete scoring value;
 \item \code{score}: integer, points credited to the declarer -- the game value if
 won, twice the negated game value if lost.
 }
 }
 \description{
 Determines whether the declarer won and by how much, given the declarer's
-card points, whether they took every trick, the announced game value, and
+card points, whether they took every trick, the complete scoring value, and
 the game type.
 }
 \details{
@@ -59,7 +69,7 @@ sk_score_game(59, "hearts", game_value = 20)  # lost, did not reach 61
 sk_score_game(0, "null", game_value = 23, declarer_lost_all = TRUE)
 }
 \seealso{
-\code{\link[=sk_game_value]{sk_game_value()}} computes the announced value; \code{\link[=sk_play_game]{sk_play_game()}}
+\code{\link[=sk_game_value]{sk_game_value()}} computes the scoring value; \code{\link[=sk_play_game]{sk_play_game()}}
 calls this on a played-out deal.
 }
 \concept{scoring functions}

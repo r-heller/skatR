@@ -4,7 +4,8 @@
 #' presets cover the common cases: official tournament rules as used by the
 #' German Skat federation (DSkV) and the International Skat Players Association
 #' (ISPA), and a relaxed casual ("Kneipe") variant. Individual options can be
-#' overridden.
+#' overridden. This is descriptive metadata: play and scoring functions do not
+#' consume this object. Bock, Ramsch and Kontra/Re game flows are not implemented.
 #'
 #' @param preset One of `"tournament"` or `"casual"`. Sets sensible defaults for
 #'   the remaining options.

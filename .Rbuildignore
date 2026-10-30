@@ -17,3 +17,6 @@
 ^data-raw$
 ^_build\.R$
 ^revdep$
+
+^\.git$
+^MAINTENANCE\.md$

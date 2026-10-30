@@ -46,7 +46,7 @@ test_that("game value multiplies base by matador multiplier", {
   expect_equal(gv, sk_base_value("hearts") * (1L + 1L))
 })
 
-test_that("announcements each add a multiplier level", {
+test_that("achieved levels and ouvert use the official multiplier table", {
   hand <- c("CJ", "HA", "HK")
   base <- sk_game_value(hand, "hearts")
   expect_equal(sk_game_value(hand, "hearts", hand_game = TRUE), base + 10L)
@@ -54,7 +54,7 @@ test_that("announcements each add a multiplier level", {
   expect_equal(
     sk_game_value(hand, "hearts", hand_game = TRUE, schneider = TRUE,
                   schwarz = TRUE, ouvert = TRUE),
-    base + 40L
+    base + 60L  # hand, schneider, announced, schwarz, announced, ouvert
   )
 })
 

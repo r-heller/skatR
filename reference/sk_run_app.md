@@ -1,8 +1,11 @@
 # Launch the skatR demo Shiny app
 
-Opens an interactive Shiny application for exploring simulations: pick a
-game type and player strategies, run a batch of games, and view the win
-rate and card-point distribution.
+Opens an interactive Shiny application with three tabs. *Simulate* runs
+a batch of games and reports the win rate, mean score and card-point
+distribution. *Deal & play* deals a game and steps through it card by
+card, showing every hand, the trick in progress and the final verdict.
+*Reference* lays out the trick-taking order, card points and game values
+for a chosen game type.
 
 ## Usage
 
@@ -20,6 +23,11 @@ sk_run_app(call = rlang::caller_env())
 
 Invisible `NULL`, called for the side effect of launching a Shiny
 application in the default browser.
+
+## Details
+
+Needs the `shiny` and `bslib` packages, both suggested rather than
+required.
 
 ## See also
 

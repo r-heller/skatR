@@ -1,7 +1,7 @@
 # Plot win rate by game type
 
 Summarises one or more simulation tibbles into a bar chart of the
-declarer's win rate per game type, ordered from worst to best.
+declarer's win rate per game type, best at the top.
 
 ## Usage
 

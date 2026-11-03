@@ -4,7 +4,9 @@ Builds a configuration object describing which rule variant to use. Two
 presets cover the common cases: official tournament rules as used by the
 German Skat federation (DSkV) and the International Skat Players
 Association (ISPA), and a relaxed casual ("Kneipe") variant. Individual
-options can be overridden.
+options can be overridden. This is descriptive metadata: play and
+scoring functions do not consume this object. Bock, Ramsch and Kontra/Re
+game flows are not implemented.
 
 ## Usage
 

@@ -56,7 +56,10 @@ card play and scores the result.</p>
 <span>  players <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  game_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hand_game <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  call <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  call <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  schneider_announced <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  schwarz_announced <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ouvert <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -71,7 +74,7 @@ card play and scores the result.</p>
 
 <dt id="arg-skat">skat<a class="anchor" aria-label="anchor" href="#arg-skat"></a></dt>
 <dd><p>An <code>sk_card</code> vector of length 2 (the skat). Its points are
-credited to the declarer for non-hand games.</p></dd>
+credited to the declarer in suit and grand games, including hand games.</p></dd>
 
 
 <dt id="arg-declarer">declarer<a class="anchor" aria-label="anchor" href="#arg-declarer"></a></dt>
@@ -88,8 +91,9 @@ to heuristic players for all seats.</p></dd>
 
 
 <dt id="arg-game-value">game_value<a class="anchor" aria-label="anchor" href="#arg-game-value"></a></dt>
-<dd><p>The announced game value. If <code>NULL</code> (default) it is computed
-from the declarer's hand plus skat.</p></dd>
+<dd><p>Optional complete scoring value. If <code>NULL</code> (default), it
+is computed from the original hand plus skat and achieved/announced levels.
+This is not a bid; overbidding must be resolved by the caller.</p></dd>
 
 
 <dt id="arg-hand-game">hand_game<a class="anchor" aria-label="anchor" href="#arg-hand-game"></a></dt>
@@ -100,6 +104,16 @@ from the declarer's hand plus skat.</p></dd>
 <dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
 <dd><p>The calling environment, used for error reporting.</p></dd>
 
+
+<dt id="arg-schneider-announced-schwarz-announced">schneider_announced, schwarz_announced<a class="anchor" aria-label="anchor" href="#arg-schneider-announced-schwarz-announced"></a></dt>
+<dd><p>Logical announcements, valid
+only for suit/grand hand games. Failure to achieve the level loses the game.</p></dd>
+
+
+<dt id="arg-ouvert">ouvert<a class="anchor" aria-label="anchor" href="#arg-ouvert"></a></dt>
+<dd><p>Logical; open play. Suit/grand ouvert implies hand and both
+announcements and requires every trick; null ouvert still requires no trick.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -109,7 +123,7 @@ from the declarer's hand plus skat.</p></dd>
 <li><p><code>declarer</code>: the declaring seat,</p></li>
 <li><p><code>game_type</code>: the game type played,</p></li>
 <li><p><code>declarer_points</code>: the integer card points credited to the declarer,
-trick points plus skat points for a non-hand game – the same total the
+trick points plus skat points, including hand games – the same total the
 result was scored on,</p></li>
 <li><p><code>tricks_won</code>: the integer number of tricks the declarer took.</p></li>
 </ul></div>

@@ -1,8 +1,8 @@
 # Score a completed Skat game
 
 Determines whether the declarer won and by how much, given the
-declarer's card points, whether they took every trick, the announced
-game value, and the game type.
+declarer's card points, whether they took every trick, the complete
+scoring value, and the game type.
 
 ## Usage
 
@@ -13,7 +13,10 @@ sk_score_game(
   game_value,
   declarer_won_all = FALSE,
   declarer_lost_all = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE,
+  ouvert = FALSE
 )
 ```
 
@@ -21,8 +24,8 @@ sk_score_game(
 
 - declarer_points:
 
-  Card points (0-120) the declarer collected in tricks, including any
-  points in the skat for a non-hand game.
+  Card points (0-120) the declarer collected in tricks, including the
+  skat, even in a hand game.
 
 - game_type:
 
@@ -31,8 +34,9 @@ sk_score_game(
 
 - game_value:
 
-  The announced/bid game value (see
+  The complete value including achieved/announced levels (see
   [`sk_game_value()`](https://r-heller.github.io/skatR/reference/sk_game_value.md)).
+  It is not a bid; overbidding is resolved externally.
 
 - declarer_won_all:
 
@@ -48,6 +52,16 @@ sk_score_game(
 
   The calling environment, used for error reporting.
 
+- schneider_announced, schwarz_announced:
+
+  Logical; contract requirements. Schwarz announced implies schneider
+  announced. Defaults to `FALSE`.
+
+- ouvert:
+
+  Logical; suit/grand ouvert requires every trick. Null ouvert retains
+  the no-trick objective. Defaults to `FALSE`.
+
 ## Value
 
 A list of class `sk_result` with elements:
@@ -59,7 +73,7 @@ A list of class `sk_result` with elements:
 
 - `schwarz`: logical, was schwarz reached (one side took every trick);
 
-- `game_value`: integer, the announced value;
+- `game_value`: integer, the complete scoring value;
 
 - `score`: integer, points credited to the declarer – the game value if
   won, twice the negated game value if lost.
@@ -75,7 +89,7 @@ applies. A lost game costs twice the game value.
 ## See also
 
 [`sk_game_value()`](https://r-heller.github.io/skatR/reference/sk_game_value.md)
-computes the announced value;
+computes the scoring value;
 [`sk_play_game()`](https://r-heller.github.io/skatR/reference/sk_play_game.md)
 calls this on a played-out deal.
 

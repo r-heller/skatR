@@ -16,7 +16,10 @@ sk_play_game(
   players = NULL,
   game_value = NULL,
   hand_game = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE,
+  ouvert = FALSE
 )
 ```
 
@@ -30,7 +33,7 @@ sk_play_game(
 - skat:
 
   An `sk_card` vector of length 2 (the skat). Its points are credited to
-  the declarer for non-hand games.
+  the declarer in suit and grand games, including hand games.
 
 - declarer:
 
@@ -48,8 +51,9 @@ sk_play_game(
 
 - game_value:
 
-  The announced game value. If `NULL` (default) it is computed from the
-  declarer's hand plus skat.
+  Optional complete scoring value. If `NULL` (default), it is computed
+  from the original hand plus skat and achieved/announced levels. This
+  is not a bid; overbidding must be resolved by the caller.
 
 - hand_game:
 
@@ -58,6 +62,17 @@ sk_play_game(
 - call:
 
   The calling environment, used for error reporting.
+
+- schneider_announced, schwarz_announced:
+
+  Logical announcements, valid only for suit/grand hand games. Failure
+  to achieve the level loses the game.
+
+- ouvert:
+
+  Logical; open play. Suit/grand ouvert implies hand and both
+  announcements and requires every trick; null ouvert still requires no
+  trick.
 
 ## Value
 
@@ -74,8 +89,8 @@ An object of class `sk_game`: a list with elements
 - `game_type`: the game type played,
 
 - `declarer_points`: the integer card points credited to the declarer,
-  trick points plus skat points for a non-hand game – the same total the
-  result was scored on,
+  trick points plus skat points, including hand games – the same total
+  the result was scored on,
 
 - `tricks_won`: the integer number of tricks the declarer took.
 

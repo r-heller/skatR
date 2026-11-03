@@ -71,9 +71,10 @@ clubs rather than as a bare string.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> returns a character vector of pretty card labels, the same
-length as <code>x</code>. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> returns <code>x</code> invisibly and is called for the side
-effect of printing. <code>[</code> returns an <code>sk_card</code> object, so subsetting a hand
-stays a hand.</p>
+length as <code>x</code>, in the order <code>x</code> holds them. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> returns <code>x</code> invisibly
+and is called for the side effect of printing; it sorts the cards into suit
+blocks for reading, the way a player fans a hand, while <code>x</code> itself keeps its
+order. <code>[</code> returns an <code>sk_card</code> object, so subsetting a hand stays a hand.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

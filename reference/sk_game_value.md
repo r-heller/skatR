@@ -1,9 +1,9 @@
 # Game value (Reizwert)
 
 Computes the value of a declared game: for suit and grand games, the
-base value times the multiplier (matadors + 1, plus one for game, plus
-levels for hand, schneider, schwarz, ouvert as announced). Null games
-use their fixed values.
+base value times the multiplier (matadors + one for game, plus levels
+for hand, achieved/announced schneider and schwarz, and ouvert). Null
+games use fixed values.
 
 ## Usage
 
@@ -15,7 +15,9 @@ sk_game_value(
   schneider = FALSE,
   schwarz = FALSE,
   ouvert = FALSE,
-  call = rlang::caller_env()
+  call = rlang::caller_env(),
+  schneider_announced = FALSE,
+  schwarz_announced = FALSE
 )
 ```
 
@@ -38,19 +40,27 @@ sk_game_value(
 
 - schneider:
 
-  Logical; announced schneider. Defaults to `FALSE`.
+  Logical; either party achieved schneider. Defaults to `FALSE`.
 
 - schwarz:
 
-  Logical; announced schwarz. Defaults to `FALSE`.
+  Logical; either party achieved schwarz (also implies schneider).
+  Defaults to `FALSE`.
 
 - ouvert:
 
-  Logical; open (ouvert) game. Defaults to `FALSE`.
+  Logical; open (ouvert) game. For suit/grand, implies hand, schneider
+  announced and schwarz announced. Defaults to `FALSE`.
 
 - call:
 
   The calling environment, used for error reporting.
+
+- schneider_announced, schwarz_announced:
+
+  Logical; additional announced levels in a hand game. Schwarz announced
+  implies schneider announced. Announcements include their required
+  achieved levels in the scoring value.
 
 ## Value
 

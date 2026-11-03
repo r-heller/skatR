@@ -1,7 +1,8 @@
 # Plot the distribution of declarer card points
 
 Draws a histogram of the declarer's card points across a simulation,
-filled by outcome, with the 61-point winning threshold marked.
+split by outcome, on the full 0-120 point scale with the 61-point
+winning threshold marked.
 
 ## Usage
 
@@ -18,7 +19,10 @@ sk_plot_points(sim, bins = 24, call = rlang::caller_env())
 
 - bins:
 
-  Number of histogram bins. Defaults to 24.
+  Approximate number of histogram bins across the 0-120 point range.
+  Defaults to 24 (five points wide). Bin edges are anchored on 61, so no
+  bin straddles the winning threshold and each bar of a suit or grand
+  simulation is a single colour.
 
 - call:
 

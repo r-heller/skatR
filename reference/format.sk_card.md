@@ -33,10 +33,12 @@ x[i, ...]
 ## Value
 
 [`format()`](https://rdrr.io/r/base/format.html) returns a character
-vector of pretty card labels, the same length as `x`.
-[`print()`](https://rdrr.io/r/base/print.html) returns `x` invisibly and
-is called for the side effect of printing. `[` returns an `sk_card`
-object, so subsetting a hand stays a hand.
+vector of pretty card labels, the same length as `x`, in the order `x`
+holds them. [`print()`](https://rdrr.io/r/base/print.html) returns `x`
+invisibly and is called for the side effect of printing; it sorts the
+cards into suit blocks for reading, the way a player fans a hand, while
+`x` itself keeps its order. `[` returns an `sk_card` object, so
+subsetting a hand stays a hand.
 
 ## See also
 

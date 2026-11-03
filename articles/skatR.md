@@ -89,8 +89,8 @@ deal
 game <- sk_play_game(deal$hands, deal$skat, declarer = 1, game_type = "grand")
 game$result
 #> <sk_result>: declarer lost
-#> • Game value: 96
-#> • Score: -192
+#> • Game value: 120
+#> • Score: -240
 #> • Schneider: yes
 #> • Schwarz: no
 ```

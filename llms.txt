@@ -1,4 +1,4 @@
-# skatR ![skatR logo](reference/figures/logo.png)
+# skatR
 
 **skatR** is a toolkit for analysing and simulating the German card game
 **Skat**. It provides trick play and scoring for suit, grand, and null

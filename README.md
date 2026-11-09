@@ -1,8 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# skatR <img src="man/figures/logo.png" align="right" height="139" alt="skatR logo" />
-
+# skatR <picture class="cttir-readme-logo"><source class="cttir-logo-dark-source" media="(prefers-color-scheme: dark)" srcset="man/figures/logo-dark.png" /><img src="man/figures/logo.png" align="right" alt="skatR logo" width="120" height="139" /></picture>
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/r-heller/skatR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-heller/skatR/actions/workflows/R-CMD-check.yaml)

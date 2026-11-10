@@ -32,7 +32,8 @@ sk_run_app <- function(call = rlang::caller_env()) {
       c(
         "The {.pkg {missing}} package{?s} {?is/are} required to run the demo \\
          app.",
-        "i" = "Install {?it/them} with {.code install.packages()}."
+        "i" = "Install {cli::qty(missing)}{?it/them} with \\
+               {.code install.packages()}."
       ),
       call = call
     )

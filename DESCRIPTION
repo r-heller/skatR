@@ -2,8 +2,8 @@ Package: skatR
 Title: Analysis and Simulation of the Card Game Skat
 Version: 0.2.0
 Authors@R:
-    person("Raban", "Heller", email = "raban.heller@uni-ulm.de",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0001-8006-9742"))
+    person("R.", "Heller", email = "raban.heller@uni-ulm.de",
+           role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0001-8006-9742"))
 Description: A toolkit for the German card game Skat. Provides a configurable
     card-play engine with suit, grand and null scoring, bidding-value
     computation, descriptive ruleset metadata, and players ranging from rule-based

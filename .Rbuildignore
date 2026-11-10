@@ -1,3 +1,4 @@
+^\.git$
 ^\.github$
 ^_pkgdown\.ya?ml$
 ^docs$
@@ -9,7 +10,8 @@
 ^CLAUDE_CODE.*$
 ^\.claude$
 ^\.orchestration$
-^.*\.svg$
+^skatR\.svg$
+^man/figures/logo-dark\.svg$
 ^\.lintr$
 ^codecov\.yml$
 ^\.Rproj\.user$
@@ -17,9 +19,10 @@
 ^data-raw$
 ^_build\.R$
 ^revdep$
-
-^\.git$
 ^MAINTENANCE\.md$
-
-^tools/branding$
-^tools/draw-logo\.R$
+^ROADMAP\.md$
+^VALIDATION\.md$
+^CITATION\.cff$
+^codemeta\.json$
+^\.zenodo\.json$
+^tools$

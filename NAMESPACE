@@ -41,6 +41,8 @@ export(sk_suit_of)
 export(sk_suits)
 export(sk_trick_winner)
 importFrom(Rcpp,sourceCpp)
-importFrom(rlang,"%||%")
-importFrom(rlang,.data)
+importFrom(rlang,
+  "%||%",
+  .data
+)
 useDynLib(skatR, .registration = TRUE)

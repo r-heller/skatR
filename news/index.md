@@ -1,5 +1,27 @@
 # Changelog
 
+## skatR 0.2.0
+
+### Rule corrections
+
+- Hand games include the skat in the declarer’s card points and matador
+  count, and automatically computed values include an achieved Schneider
+  or Schwarz.
+- Announced levels (Schneider, Schwarz, ouvert) follow the official hand
+  and announcement levels with their implied requirements; Schneider
+  needs 90 points and Schwarz all tricks. Null keeps its fixed values
+  23/35/46/59. Corrected scores can therefore differ from 0.1.0.
+- Deals are validated as 32 unique cards before any player runs;
+  fractional and non-finite inputs and score overflow are rejected.
+
+### CRAN preparation
+
+- The package help page uses the vector logo, which is now shipped in
+  the source package; the build no longer leaves an empty `tools/`
+  directory.
+- GitHub Actions check the package on R devel, release and oldrel-1.
+- Added spelling `WORDLIST` entries and updated `cran-comments.md`.
+
 ## skatR 0.1.0
 
 ### Initial release

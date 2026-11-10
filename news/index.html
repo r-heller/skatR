@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">skatR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,21 @@
       <small>Source: <a href="https://github.com/r-heller/skatR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="skatr-020">skatR 0.2.0<a class="anchor" aria-label="anchor" href="#skatr-020"></a></h2>
+<div class="section level3">
+<h3 id="rule-corrections-0-2-0">Rule corrections<a class="anchor" aria-label="anchor" href="#rule-corrections-0-2-0"></a></h3>
+<ul><li>Hand games include the skat in the declarer’s card points and matador count, and automatically computed values include an achieved Schneider or Schwarz.</li>
+<li>Announced levels (Schneider, Schwarz, ouvert) follow the official hand and announcement levels with their implied requirements; Schneider needs 90 points and Schwarz all tricks. Null keeps its fixed values 23/35/46/59. Corrected scores can therefore differ from 0.1.0.</li>
+<li>Deals are validated as 32 unique cards before any player runs; fractional and non-finite inputs and score overflow are rejected.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="cran-preparation-0-2-0">CRAN preparation<a class="anchor" aria-label="anchor" href="#cran-preparation-0-2-0"></a></h3>
+<ul><li>The package help page uses the vector logo, which is now shipped in the source package; the build no longer leaves an empty <code>tools/</code> directory.</li>
+<li>GitHub Actions check the package on R devel, release and oldrel-1.</li>
+<li>Added spelling <code>WORDLIST</code> entries and updated <code>cran-comments.md</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="skatr-010">skatR 0.1.0<a class="anchor" aria-label="anchor" href="#skatr-010"></a></h2>
 <div class="section level3">
